@@ -33,17 +33,22 @@ class ApiModel(BaseModel):
 
 
 class RfqCreate(ApiModel):
-    reference_id: str = Field(
-        min_length=3, max_length=50, pattern=r"^[A-Za-z0-9][A-Za-z0-9_-]*$"
-    )
-    title: str = Field(min_length=3, max_length=255)
+    reference_id: Annotated[
+        str,
+        Field(
+            min_length=3,
+            max_length=50,
+            pattern=r"^[A-Za-z0-9][A-Za-z0-9_-]*$",
+        ),
+    ]
+    title: Annotated[str, Field(min_length=3, max_length=255)]
     pickup_date: UtcDateTime
     bid_start_time: UtcDateTime
     bid_close_time: UtcDateTime
     forced_close_time: UtcDateTime
     is_british_auction: bool = True
-    trigger_window_mins: int = Field(default=10, ge=1, le=1440)
-    extension_duration_mins: int = Field(default=5, ge=1, le=1440)
+    trigger_window_mins: Annotated[int, Field(ge=1, le=1440)] = 10
+    extension_duration_mins: Annotated[int, Field(ge=1, le=1440)] = 5
     extension_trigger: TriggerType = TriggerType.ANY_BID
 
     @model_validator(mode="after")
@@ -56,11 +61,17 @@ class RfqCreate(ApiModel):
 
 
 class QuoteCreate(ApiModel):
-    carrier_name: str = Field(min_length=2, max_length=100)
-    freight_charges: Decimal = Field(ge=0, max_digits=12, decimal_places=2)
-    origin_charges: Decimal = Field(ge=0, max_digits=12, decimal_places=2)
-    destination_charges: Decimal = Field(ge=0, max_digits=12, decimal_places=2)
-    transit_time_days: int = Field(ge=0, le=365)
+    carrier_name: Annotated[str, Field(min_length=2, max_length=100)]
+    freight_charges: Annotated[
+        Decimal, Field(ge=0, max_digits=12, decimal_places=2)
+    ]
+    origin_charges: Annotated[
+        Decimal, Field(ge=0, max_digits=12, decimal_places=2)
+    ]
+    destination_charges: Annotated[
+        Decimal, Field(ge=0, max_digits=12, decimal_places=2)
+    ]
+    transit_time_days: Annotated[int, Field(ge=0, le=365)]
     validity_date: UtcDateTime
 
 
